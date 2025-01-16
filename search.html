@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./lib/font-awesome.css" />
+    <link rel="stylesheet" href="./css/spinner.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Search | Movies, Shows & Animes</title>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="container">
+        <div class="logo">
+          <a href="/">Ps<sub>Prime-Scene</sub></a>
+        </div>
+
+        <nav>
+          <ul>
+            <li>
+              <a class="nav-link" href="/">Movies</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/tv-shows.html">TV Shows</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/anime.html">Animes</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="search">
+      <div class="container">
+        <form action="/search.html" class="search-form">
+          <!--input radios  -->
+          <div class="search-radio">
+            <input
+              type="radio"
+              name="type"
+              id="movies"
+              value="movies"
+              checked
+            />
+            <label for="movies">Movies</label>
+            <input type="radio" name="type" id="tv-shows" value="tv-shows" />
+            <label for="tv-shows">Tv-shows</label>
+
+            <input type="radio" name="type" id="animes" value="animes" />
+            <label for="animes">Animes</label>
+          </div>
+
+          <div class="search-flex">
+            <input
+              type="text"
+              id="search-input"
+              name="search-input"
+              placeholder="Enter search term"
+            />
+            <button type="submit" class="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="search-results-wrapper" class="container">
+      <h2 class="search-result-heading">Search Results</h2>
+      <!-- Search Result -->
+      <div id="search-results" class="flex">
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <a href="#">
+            <img src="./images/no-image.jpg" alt="" class="search-card-img" />
+          </a>
+
+          <div class="card-body">
+            <h5>Movie, Anime or Show Name</h5>
+            <p class="card-body-note">
+              <small>Release Date:XX /XX /XXXX</small>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- pagination -->
+      <div id="pagination">
+        <div class="pagination">
+          <button class="btn btn-primary" id="prev">Prev</button>
+          <button class="btn btn-primary" id="next">Next</button>
+          <div class="page-counter">Page 1 of 5</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="logo"><span>PRIME-SCENE</span></div>
+
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <div class="spinner"></div>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>
