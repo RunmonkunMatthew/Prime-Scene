@@ -4,6 +4,13 @@ const global = {
     apikey: "3ccd15014defbab04acd7be3819b2942",
     apiUrl: "https://api.themoviedb.org/3/",
   },
+  search: {
+    term: "",
+    type: "",
+    page: 1,
+    totalPages: 1,
+    totalResults: 0
+  },
 };
 
 async function displayPopularMovies() {
@@ -12,6 +19,7 @@ async function displayPopularMovies() {
   results.forEach((movie) => {
     const div = document.createElement("div");
     div.classList.add("card");
+    div.setAttribute('data-aos', 'zoom-in-up');
     div.innerHTML = `
           <a href="movie-details.html?id=${movie.id}">
 
@@ -51,6 +59,7 @@ async function displayPopularTvShows() {
   results.forEach((show) => {
     const div = document.createElement("div");
     div.classList.add("card");
+    div.setAttribute('data-aos', 'zoom-in-up');
     div.innerHTML = `
       <a href="tv-show-details.html?id=${show.id}">
 
@@ -84,7 +93,7 @@ async function displayPopularTvShows() {
   });
 }
 
-//display movie details\
+//display movie details
 async function displayMovieDetails() {
   const movieId = window.location.search.split("=")[1];
 
@@ -113,8 +122,7 @@ async function displayMovieDetails() {
                    alt="${movie.title}"
                    class="movie-img"
                  /> `
-             
-          }
+             }
             </div>
 
             <div>
@@ -271,6 +279,124 @@ function displayBackgroundImage(type, BackgroundPath) {
   }
 }
 
+// Search function
+async function search() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  global.search.type = urlParams.get("type");
+  global.search.term = urlParams.get("search-term");
+
+  if (global.search.term !== "" && global.search.term !== null) {
+    const { results, page, total_pages, total_results } = await searchApiData();
+
+    global.search.page = page;
+    global.search.totalPages = total_pages;
+    global.search.totalResults = total_results;
+
+    if (results.length === 0) {
+      showAlert("No results found");
+      return;
+    }
+
+    displaySearchResults(results);
+  } else {
+    showAlert("Please enter a search term");
+  }
+}
+
+//display search results function
+function displaySearchResults(results) {
+  document.querySelector('#search-results').innerHTML = '';
+  document.querySelector('.search-result-heading').innerHTML = '';
+  document.querySelector('#pagination').innerHTML = '';
+
+  results.forEach((result) => {
+    const div = document.createElement("div");
+    div.setAttribute('data-aos', 'zoom-in-up');
+    div.classList.add("card");
+    div.innerHTML = `
+          <a href="${global.search.type === 'movie' ? `${global.search.type}-details.html?id="${result.id}` : `${global.search.type}-show-details.html?id=${result.id}` }">
+
+           ${
+             result.poster_path
+               ? `
+             <img
+               src="https://image.tmdb.org/t/p/w500/${result.poster_path}"
+              alt="${global.search.type === "movie" ? result.title : result.name}"
+              class="movie-img"
+            />
+            `
+               : `
+             <img
+              src="./images/no-image.jpg"
+              alt="${
+                global.search.type === "movie" ? result.title : result.name
+              }"
+              class="movie-img"
+            />`
+           }
+          </a>
+
+          <div class="card-body">
+            <h5>${
+              global.search.type === "movie" ? result.title : result.name
+            }</h5>
+            <p class="card-body-note">
+              <small>Release Date:${
+                global.search.type === "movie"
+                  ? result.release_date
+                  : result.first_air_date
+              }</small>
+            </p>
+          </div>
+    `;
+
+    document.querySelector('.search-result-heading').innerHTML = `<h2> ${results.length} of ${global.search.totalResults} results for ${global.search.term}</h2>`;
+
+    document.querySelector("#search-results").appendChild(div);
+  });
+
+  displayPagination();
+}
+
+//pagination
+function displayPagination(){
+  const div = document.createElement('div');
+  div.classList.add('pagination');
+  div.innerHTML = ` 
+  <button class="btn btn-primary" id="prev">Prev</button>
+  <button class="btn btn-primary" id="next">Next</button>
+  <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
+  `
+
+  document.querySelector('#pagination').appendChild(div);
+
+  //disable prev button on page 1
+  if(global.search.page === 1){
+    document.querySelector('#prev').disabled = true;
+  }
+
+  // disable next button on last page
+  if(global.search.page === global.search.totalPages){
+    document.querySelector('#next').disabled = true;
+  }
+
+  //Next page
+  document.querySelector('#next').addEventListener('click', async () => {
+    global.search.page++;
+    const {results, totalPages} = await searchApiData();
+    displaySearchResults(results);
+
+    //prev page
+    document.querySelector('#prev').addEventListener('click', async () => {
+      global.search.page--;
+      const {results, totalPages} = await searchApiData();
+      displaySearchResults(results);
+    })
+  })
+}
+
 //Slider
 async function displaySwiper() {
   const { results } = await fetchApiData("movie/top_rated");
@@ -282,58 +408,56 @@ async function displaySwiper() {
     div.innerHTML = `
             <a href="movie-details.html?id=${movie.id}">
               ${
-
-               movie.poster_path
-
-                 ? `
+                movie.poster_path
+                  ? `
                  <img
                    src="https://image.tmdb.org/t/p/w500/${movie.poster_path}"
                    alt="${movie.title}"
                    class="movie-img"
                  />
                `
-                 : ` 
+                  : ` 
                  <img
                    src="./images/no-image.jpg"
                    alt="${movie.title}"
                    class="movie-img"
                  /> `
-          }
+              }
             </a>
             <h4 class="swiper-rating">
               <i class="fas fa-star text-secondary"></i> ${movie.vote_average.toFixed()} / 10
             </h4>
     `;
-    
-    document.querySelector('.swiper-wrapper').appendChild(div);
-    
+
+    document.querySelector(".swiper-wrapper").appendChild(div);
+
     initSwiper();
   });
 }
 
-// init slider 
+// init slider
 function initSwiper() {
-  const swiper = new Swiper('.swiper', {
+  const swiper = new Swiper(".swiper", {
     slidesPerView: 1,
     spaceBetween: 30,
     freeMode: true,
     loop: true,
-    autoplay:{
+    autoplay: {
       delay: 3000,
-      disableOnInteraction: false
+      disableOnInteraction: false,
     },
     breakpoints: {
-      500:{
-        slidesPerView: 2
+      500: {
+        slidesPerView: 2,
       },
-      700:{
-        slidesPerView: 3
+      700: {
+        slidesPerView: 3,
       },
       1200: {
-        slidesPerView: 4
+        slidesPerView: 4,
       },
-    }
-  })
+    },
+  });
 }
 
 // fetch api data
@@ -344,6 +468,23 @@ async function fetchApiData(endpoint) {
   showSpinner();
   const result = await fetch(
     `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
+  );
+
+  const data = result.json();
+
+  hideSpinner();
+  return data;
+}
+
+// search api data
+async function searchApiData() {
+  const API_KEY = global.api.apikey;
+  const API_URL = global.api.apiUrl;
+
+  showSpinner();
+
+  const result = await fetch(
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`
   );
 
   const data = result.json();
@@ -373,6 +514,17 @@ function hideSpinner() {
   document.querySelector(".spinner").classList.remove("show");
 }
 
+// show alert function
+function showAlert(message) {
+  const alertEl = document.createElement("div");
+  alertEl.classList.add("alert");
+  alertEl.appendChild(document.createTextNode(message));
+
+  document.querySelector("#alert").appendChild(alertEl);
+
+  setTimeout(() => alertEl.remove(), 3000);
+}
+
 //add commas to numbers
 function addCommasToNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -382,6 +534,7 @@ function init() {
   switch (global.currentPage) {
     case "/":
     case "/index.html":
+      displaySwiper();
       displayPopularMovies();
       break;
     case "/tv-shows.html":
@@ -399,7 +552,7 @@ function init() {
       displayShowDetails();
       break;
     case "/search.html":
-      console.log("Search Page");
+      search();
       break;
   }
 
